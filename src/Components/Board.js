@@ -14,13 +14,13 @@ function calculateWinner(squares) {
     ];
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
-        console.log(lines[i]);
+        // console.log(i);
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
             // console.log(squares[b]);
             return squares[a];
         }
-        return null;
     }
+    return null;
 }
 
 class Board extends React.Component {
@@ -29,19 +29,22 @@ class Board extends React.Component {
         this.state = {
             squares: Array(9).fill(null),
             xIsNext: true,
+            clicks: 0,
         };
     }
 
     handleClick(i) {
         const squares = this.state.squares.slice();
         if (calculateWinner(squares) || squares[i]) {
-            console.log("clicked");
+            // console.log("clicked");
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
+        const clicks = this.state.clicks;
         this.setState({
             squares: squares,
             xIsNext: !this.state.xIsNext,
+            clicks: clicks + 1,
         })
     }
 
@@ -56,10 +59,13 @@ class Board extends React.Component {
 
     render() {
         const winner = calculateWinner(this.state.squares);
+        console.log(this.state.clicks)
         let status;
         if (winner) {
-            console.log("winner");
+            // console.log("winner");
             status = "Winner: " + winner;
+        } else if (this.state.clicks === 9) {
+            status = "No one wins";
         } else {
             status = "Next player: " + (this.state.xIsNext ? 'X' : 'O')
         }
